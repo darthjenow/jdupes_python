@@ -1,0 +1,38 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "find_duplicates.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/find_duplicates.py",
+			"console": "integratedTerminal",
+			"args": [
+				"test_files",
+				"test_files_duplicates"
+				,".git"
+			],
+			"justMyCode": true
+		},
+		{
+			"name": "move_duplicates.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/move_duplicates.py",
+			"console": "integratedTerminal",
+			"args": [],
+			"justMyCode": true
+		},
+		{
+			"name": "search_empty.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/search_empty.py",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		}
+	]
+}
