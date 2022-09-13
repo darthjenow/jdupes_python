@@ -11,6 +11,7 @@ EXEC_DIR = Path(__file__).parent
 SEARCH_DIRECTORIES = WORK_DIR / Path("directories.txt")
 EXCLUDES = WORK_DIR / Path("exclude.txt")
 
+VERSION = "v0.1"
 
 def main():
 	# parse the external files for search directories and excludes
@@ -19,9 +20,10 @@ def main():
 	directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else ["."]
 
 	# setup CLI-arguments
-	parser = ArgumentParser()
+	parser = ArgumentParser(prog="find_duplicates")
 	parser.add_argument("-o", "--output", help="the file to write the duplicates to (default: duplciates.txt)", action="store", default="duplicates.txt")
 	parser.add_argument("-x", "--exclude", help="directories to be excluded", action="extend", nargs="*", default=excludes_extern)
+	parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
 	parser.add_argument("DIR", action="extend", help="the directories to be searched for duplicates", nargs="*", default=directories_extern)
 	args = parser.parse_args()
 

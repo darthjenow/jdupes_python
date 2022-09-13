@@ -9,15 +9,18 @@ EXEC_DIR = Path(__file__).parent
 SEARCH_DIRECTORIES = WORK_DIR / Path("directories.txt")
 EXCLUDES = WORK_DIR / Path("exclude.txt")
 
+VERSION = "v0.1"
+
 re_dir_split = re.compile("\r?\n")
 excludes_extern = re_dir_split.split(EXCLUDES.read_text()) if EXCLUDES.exists() else []
 directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else ["."]
 
 def main():
-	parser = ArgumentParser()
+	parser = ArgumentParser(prog="search_empty")
 	parser.add_argument("-o", "--output", action="store", default="empty.txt")
 	parser.add_argument("-x", "--exclude", action="extend", nargs="*", default=excludes_extern)
 	parser.add_argument("-d", "--delete", action="store_true")
+	parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
 	parser.add_argument("DIR", action="extend", nargs="*", default=directories_extern)
 	args = parser.parse_args()
 

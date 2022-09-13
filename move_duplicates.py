@@ -7,11 +7,14 @@ import re
 WORK_DIR = Path().resolve()
 EXEC_DIR = Path(__file__).parent
 
+VERSION = "v0.1"
+
 def main():
 	# setup CLI-arguments
-	parser = ArgumentParser()
+	parser = ArgumentParser(prog="move_duplicates")
 	parser.add_argument("-i", "--input", action="store", default="duplicates.txt")
 	parser.add_argument("-o", "--output", action="store", default="duplicates")
+	parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
 	args = parser.parse_args()
 
 	file_list = Path(args.input).read_text()

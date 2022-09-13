@@ -1,5 +1,6 @@
 from pathlib import Path
 from zipfile import ZipFile
+import importlib
 
 BUILD_DIR = Path("dist")
 LICENSE_DIR = Path("license_for_build")
@@ -20,7 +21,9 @@ def main():
 	ZIP_DIR.mkdir(exist_ok=True)
 
 	for name, packages in packages.items():
-		zip_file = (ZIP_DIR / name).with_suffix(".zip")
+		version = importlib.import_module(name).VERSION
+
+		zip_file = ZIP_DIR / f"{name}_{version}.zip"
 		with ZipFile(zip_file, mode="w") as zip_pack:
 			for package in packages:
 				zip_pack.write(package, arcname=package.name)
