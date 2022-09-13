@@ -3,6 +3,9 @@ test_files_duplicates
 duplicates
 
 jdupes.exe
+duplicates.txt
 
 build
 dist
+
+__pycache__

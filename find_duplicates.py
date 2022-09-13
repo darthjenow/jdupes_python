@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 import re
 import os
@@ -10,16 +11,18 @@ EXEC_DIR = Path(__file__).parent
 SEARCH_DIRECTORIES = WORK_DIR / Path("directories.txt")
 EXCLUDES = WORK_DIR / Path("exclude.txt")
 
-re_dir_split = re.compile("\r?\n")
-excludes_extern = re_dir_split.split(EXCLUDES.read_text()) if EXCLUDES.exists() else []
-directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else ["."]
 
 def main():
+	# parse the external files for search directories and excludes
+	re_dir_split = re.compile("\r?\n")
+	excludes_extern = re_dir_split.split(EXCLUDES.read_text()) if EXCLUDES.exists() else []
+	directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else ["."]
+
 	# setup CLI-arguments
 	parser = ArgumentParser()
-	parser.add_argument("-o", "--output", action="store", default="duplicates.txt")
-	parser.add_argument("-x", "--exclude", action="extend", nargs="*", default=excludes_extern)
-	parser.add_argument("DIR", action="extend", nargs="*", default=directories_extern)
+	parser.add_argument("-o", "--output", help="the file to write the duplicates to (default: duplciates.txt)", action="store", default="duplicates.txt")
+	parser.add_argument("-x", "--exclude", help="directories to be excluded", action="extend", nargs="*", default=excludes_extern)
+	parser.add_argument("DIR", action="extend", help="the directories to be searched for duplicates", nargs="*", default=directories_extern)
 	args = parser.parse_args()
 
 	# pad the search-dirs with parentheses
@@ -54,6 +57,17 @@ def convert_exclude(_exclude):
 			...
 	
 	return exclude
+
+def print_license():
+	license_text = []
+
+	# create paths for license-files
+	for lic in LICENSE_FILES:
+		license_text.append((EXEC_DIR / lic).read_text())
+
+	license_text = " \nLICENSE\n \n" + "\n \n \n".join(license_text)
+
+	return license_text
 
 if __name__ == "__main__":
 	main()

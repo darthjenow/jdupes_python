@@ -120,3 +120,7 @@ search_empty_exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
+# package into zip
+import package
+package.main()
