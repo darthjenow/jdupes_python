@@ -17,7 +17,7 @@ def main():
 	# parse the external files for search directories and excludes
 	re_dir_split = re.compile("\r?\n")
 	excludes_extern = re_dir_split.split(EXCLUDES.read_text()) if EXCLUDES.exists() else []
-	directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else ["."]
+	directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else []
 
 	# setup CLI-arguments
 	parser = ArgumentParser(prog="find_duplicates")
@@ -30,23 +30,34 @@ def main():
 	# pad the search-dirs with parentheses
 	search_dirs = [f"\"{WORK_DIR / dir}\"" for dir in args.DIR]
 
+	for d in args.DIR:
+		print (d)
+
 	jdupes_excludes = [f"-X nostr:\"{convert_exclude(exclude)}\"" for exclude in args.exclude]
+
+	match os.name:
+		case "nt":
+			jdupes_path = "jdupes.exe"
+		case "posix":
+			jdupes_path = "jdupes"
+		case "_":
+			jdupes_path = "jdupes"
+
+	jdupes_path = str(EXEC_DIR / jdupes_path)
 
 	# construct the jdupes-command
 	jdupes_command = " ".join([
-		f"{EXEC_DIR}/jdupes.exe",
+		jdupes_path,
 		"-rO", # recursive and sort by order of SEARCH_DIRS
 		*jdupes_excludes,
 		*search_dirs])
 	
-	print (jdupes_command)
-
 	# run jdupes and capture its output
 	jdupes_stream = os.popen(jdupes_command)
 	jdupes_output = jdupes_stream.read()
 
 	# write the found duplicates into a file
-	Path(args.output).write_text(jdupes_output)
+	Path(args.output).write_text(jdupes_output, encoding="utf-8")
 
 def convert_exclude(_exclude):
 	match os.name:
@@ -59,17 +70,6 @@ def convert_exclude(_exclude):
 			...
 	
 	return exclude
-
-def print_license():
-	license_text = []
-
-	# create paths for license-files
-	for lic in LICENSE_FILES:
-		license_text.append((EXEC_DIR / lic).read_text())
-
-	license_text = " \nLICENSE\n \n" + "\n \n \n".join(license_text)
-
-	return license_text
 
 if __name__ == "__main__":
 	main()

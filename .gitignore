@@ -3,7 +3,10 @@ test_files_duplicates
 duplicates
 
 jdupes.exe
+jdupes
+
 duplicates.txt
+empty.txt
 
 build
 dist

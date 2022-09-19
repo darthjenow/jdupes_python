@@ -4,13 +4,23 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build standalone",
+			"label": "build windows",
 			"type": "shell",
-			"command": "pyinstaller jdupes_python.spec",
+			"command": "pyinstaller jdupes_python_windows.spec",
 			"problemMatcher": [],
 			"group": {
 				"kind": "build",
 				"isDefault": true
+			}
+		},
+		{
+			"label": "build linux",
+			"type": "shell",
+			"command": "pyinstaller jdupes_python_linux.spec",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": false
 			}
 		}
 	]

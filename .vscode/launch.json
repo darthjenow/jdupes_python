@@ -11,9 +11,11 @@
 			"program": "${workspaceFolder}/find_duplicates.py",
 			"console": "integratedTerminal",
 			"args": [
-				"test_files",
-				"test_files_duplicates"
-				,".git"
+				// "test_files",
+				// "test_files_duplicates"
+				// ,".git"
+				".\\Wallpaper\\",
+				".\\Wallpaper 2\\"
 			],
 			"justMyCode": true
 		},
@@ -31,6 +33,22 @@
 			"type": "python",
 			"request": "launch",
 			"program": "${workspaceFolder}/search_empty.py",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		},
+		{
+			"name": "find_char_error.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/find_char_error.py",
+			"console": "integratedTerminal",
+			"justMyCode": true
+		},
+		{
+			"name": "package.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/package.py",
 			"console": "integratedTerminal",
 			"justMyCode": true
 		}
