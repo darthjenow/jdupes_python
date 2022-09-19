@@ -11,11 +11,8 @@
 			"program": "${workspaceFolder}/find_duplicates.py",
 			"console": "integratedTerminal",
 			"args": [
-				// "test_files",
-				// "test_files_duplicates"
-				// ,".git"
-				".\\Wallpaper\\",
-				".\\Wallpaper 2\\"
+				"test_files",
+				"test_files_duplicates"
 			],
 			"justMyCode": true
 		},

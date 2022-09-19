@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 import re
 import os
@@ -8,32 +7,34 @@ from argparse import ArgumentParser
 WORK_DIR = Path().resolve()
 EXEC_DIR = Path(__file__).parent
 
-SEARCH_DIRECTORIES = WORK_DIR / Path("directories.txt")
-EXCLUDES = WORK_DIR / Path("exclude.txt")
-
-VERSION = "v0.1"
+VERSION = "v0.2_DEVEL"
 
 def main():
-	# parse the external files for search directories and excludes
-	re_dir_split = re.compile("\r?\n")
-	excludes_extern = re_dir_split.split(EXCLUDES.read_text()) if EXCLUDES.exists() else []
-	directories_extern = re_dir_split.split(SEARCH_DIRECTORIES.read_text()) if SEARCH_DIRECTORIES.exists() else []
-
 	# setup CLI-arguments
 	parser = ArgumentParser(prog="find_duplicates")
-	parser.add_argument("-o", "--output", help="the file to write the duplicates to (default: duplciates.txt)", action="store", default="duplicates.txt")
-	parser.add_argument("-x", "--exclude", help="directories to be excluded", action="extend", nargs="*", default=excludes_extern)
 	parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
-	parser.add_argument("DIR", action="extend", help="the directories to be searched for duplicates", nargs="*", default=directories_extern)
+
+	parser.add_argument("-o", "--output", help="the file to write the duplicates to (default: duplciates.txt)", action="store", default="duplicates.txt")
+	parser.add_argument("-x", "--exclude", help="directories to be excluded", action="extend", nargs="*")
+	parser.add_argument("DIR", action="extend", help="the directories to be searched for duplicates", nargs="*")
+
+	parser.add_argument("-S", "--search-list", help=f"text file with a list of directories to search through", nargs="?")
+	parser.add_argument("-X", "--exclude-list", help=f"text file with a list of directories to search through", nargs="?")
+
 	args = parser.parse_args()
 
+	# append the dirs from the files to the list
+	re_dir_split = re.compile("\r?\n")
+	search_extern = load_file_args(args.search_list)
+	exclude_extern = load_file_args(args.exclude_list)
+
 	# pad the search-dirs with parentheses
-	search_dirs = [f"\"{WORK_DIR / dir}\"" for dir in args.DIR]
+	search_dirs = [f"\"{convert_path(dir)}\"" for dir in args.DIR]
 
-	for d in args.DIR:
-		print (d)
+	if not args.exclude:
+		args.exclude = []
 
-	jdupes_excludes = [f"-X nostr:\"{convert_exclude(exclude)}\"" for exclude in args.exclude]
+	jdupes_excludes = [f"-X nostr:\"{convert_path(exclude)}\"" for exclude in [*args.exclude, *exclude_extern]]
 
 	match os.name:
 		case "nt":
@@ -59,7 +60,20 @@ def main():
 	# write the found duplicates into a file
 	Path(args.output).write_text(jdupes_output, encoding="utf-8")
 
-def convert_exclude(_exclude):
+def load_file_args(f_path: str) -> list[str]:
+	entries = []
+	if f_path:
+		f = Path(f_path)
+		content = f.read_text(encoding="utf-8")
+		entries = re.split(r"\r?\n", content)
+
+		# remove all empty entries
+		entries = [e for e in entries if len(e) > 0]
+
+	return entries
+
+
+def convert_path(_exclude):
 	match os.name:
 		case "nt":
 			exclude = _exclude.replace("/", "\\")
